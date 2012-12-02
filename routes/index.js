@@ -1,5 +1,5 @@
-module.exports = {
-   '/' : require('./home.js')
+module.exports = function(app) {
+	app.get('/', require('./home.js'));
 };
 
 

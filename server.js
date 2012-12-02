@@ -3,7 +3,6 @@
 var express = require('express')
 , swig = require('swig')
   , cons = require('consolidate')
-  , routes = require('./routes')
   , http = require('http')
   , path = require('path')
   , VIEWS_DIR = __dirname + '/views';
@@ -91,44 +90,45 @@ var SampleApp = function() {
     /*  ================================================================  */
 
     /**
-     *  Create the routing table entries + handlers for the application.
-     */
-     
-     
-    self.createRoutes = function() {
-        self.routeMap = { };
-
-        self.routeMap['/env'] = function(req, res) {
-            var content = 'Version: ' + process.version + '\n<br/>\n' +
-                          'Env: {<br/>\n<pre>';
-            //  Add env entries.
-            for (var k in process.env) {
-               content += '   ' + k + ': ' + process.env[k] + '\n';
-            }
-            content += '}\n</pre><br/>\n'
-            res.send(content);
-            res.send('<html>\n' +
-                     '  <head><title>Node.js Process Env</title></head>\n' +
-                     '  <body>\n<br/>\n' + content + '</body>\n</html>');
-        };
-
-        self.routeMap['/'] =routes.index;
-        
-    };
-
-
-    /**
      *  Initialize the server (express) and create the routes and register
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.createRoutes();
         self.app = express();
+
+        var app = self.app;
+
+        swig.init({
+            root: VIEWS_DIR, //Note this directory is your Views directory
+            allowErrors: true // allows errors to be thrown and caught by express
+        });
+
+        // assign the swig engine to .html files
+        app.engine('html', cons.swig);
+
+        app.configure(function(){
+          app.set('port', process.env.PORT || 3000);
+          app.set('views', VIEWS_DIR);
+          app.set('view engine', 'html');
+          app.set('view options', { layout: false });
+          app.use(express.favicon((path.join(__dirname, '/public/images/favicon.ico'))));
+          app.use(express.logger('dev'));
+          app.use(express.bodyParser());
+          app.use(express.methodOverride());
+          app.use(app.router);
+          app.use(express.static(path.join(__dirname, 'public')));
+        });
+
+        app.configure('development', function(){
+          app.use(express.errorHandler());  
+          require('swig').init({
+            root: VIEWS_DIR, //Note this directory is your Views directory
+            allowErrors: true,
+            cache: false
+          });
+        });
         
-        //  Add handlers for the app (from the routes).
-        for (var r in routes) {
-            self.app.get(r, routes[r]);
-        }
+        require('./routes')(self.app);
     };
 
 
@@ -143,37 +143,7 @@ var SampleApp = function() {
         // Create the express server and routes.
         self.initializeServer();
         
-        var app = self.app;
-
-swig.init({
-    root: VIEWS_DIR, //Note this directory is your Views directory
-    allowErrors: true // allows errors to be thrown and caught by express
-});
-
-// assign the swig engine to .html files
-app.engine('html', cons.swig);
-
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', VIEWS_DIR);
-  app.set('view engine', 'html');
-  app.set('view options', { layout: false });
-  app.use(express.favicon((path.join(__dirname, '/public/images/favicon.ico'))));
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler());  
-  require('swig').init({
-    root: VIEWS_DIR, //Note this directory is your Views directory
-    allowErrors: true,
-    cache: false
-});
-});
+    
     };
 
 
