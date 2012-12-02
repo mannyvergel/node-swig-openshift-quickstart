@@ -97,6 +97,7 @@ var SampleApp = function() {
         self.app = express();
 
         var app = self.app;
+        require('./routes')(app);
 
         swig.init({
             root: VIEWS_DIR, //Note this directory is your Views directory
@@ -128,7 +129,7 @@ var SampleApp = function() {
           });
         });
         
-        require('./routes')(self.app);
+       
     };
 
 
