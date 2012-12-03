@@ -97,7 +97,6 @@ var SampleApp = function() {
         self.app = express();
 
         var app = self.app;
-        require('./routes')(app);
 
         swig.init({
             root: VIEWS_DIR, //Note this directory is your Views directory
@@ -114,6 +113,8 @@ var SampleApp = function() {
           app.set('view options', { layout: false });
           app.use(express.favicon((path.join(__dirname, '/public/images/favicon.ico'))));
           app.use(express.logger('dev'));
+          //if you use formidable, you have to modify the next line
+          //because it's not compatible with express bodyParser
           app.use(express.bodyParser());
           app.use(express.methodOverride());
           app.use(app.router);
@@ -128,6 +129,8 @@ var SampleApp = function() {
             cache: false
           });
         });
+
+        require('./routes')(app);
         
        
     };
