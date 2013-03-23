@@ -1,8 +1,9 @@
 node-swig-openshift-quickstart
 ==============================
 
-Node JS 0.8.14, Express, Swig and OpenShift quickstart.
+Node JS 0.10.1, Express, Swig and OpenShift quickstart.
 
+[Update] Added MongoDB, Mongoose, Foundation (Front-end), Passport and basic login
 
 Example:
 

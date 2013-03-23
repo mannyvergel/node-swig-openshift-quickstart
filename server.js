@@ -19,6 +19,7 @@ var flash = require('connect-flash');
 var fs      = require('fs');
 var db = require('mylib/db.js');
 db.connect();
+
 var eu = require('mylib/expressUtils.js');
 var passport = require('passport')
 , LocalStrategy = require('passport-local').Strategy;
@@ -215,14 +216,14 @@ var SampleApp = function() {
 };   /*  Sample Application.  */
 
 
+var zapp = new SampleApp();
+zapp.initialize();
+zapp.start();
+
 /**
  *  main():  Main code.
  */
- mongoose.connection.on('open', function() {
-  var zapp = new SampleApp();
-  zapp.initialize();
-  zapp.start();
-  
-
+mongoose.connection.on('open', function() {
+  db.initData();
 });
 

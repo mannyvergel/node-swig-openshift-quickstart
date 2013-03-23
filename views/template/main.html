@@ -48,7 +48,7 @@
 
         {% if user %}
            <li class="divider"></li>
-           <li class="has-dropdown"><a href="#">Welcome {{user.name}}</a>
+           <li class="has-dropdown"><a href="#">Welcome {{user.nickName}}</a>
                 <ul class="dropdown">
                   <li><a href="/logout">Logout</a></li>
                 </ul>
@@ -63,7 +63,7 @@
       </section>
     </nav>
 
-    
+
 <div class="row">
   <div class="large-{%if showSideAds%}8{%else%}12{%endif%} columns">
 
