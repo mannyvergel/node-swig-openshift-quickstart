@@ -1,0 +1,46 @@
+{% extends 'template/main.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+
+    
+{% endblock %}
+
+{% block content %}
+
+<!-- Three-up Content Blocks -->
+  
+
+<div class="row">
+  
+    <div class="large-4 large-centered columns">
+
+      <form action="/login" method="post">
+      	{% if r %}
+      		<input type="hidden" name="r" value="{{r}}">
+      	{% endif %}
+		    <div>
+		        <label>Username:</label>
+		        <input type="text" name="username"/>
+		    </div>
+		    <div>
+		        <label>Password:</label>
+		        <input type="password" name="password"/>
+		    </div>
+		    <div>
+		        <input type="submit" value="Log In"/>
+		    </div>
+		    
+		    
+		</form>
+    </div>
+    
+      
+  </div>
+
+ 
+
+
+  
+  {% endblock %}

@@ -6,7 +6,42 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , VIEWS_DIR = __dirname + '/views';
+
+global.isProd = process.env.OPENSHIFT_INTERNAL_IP != null; 
+
+
+var log4js = require('log4js');
+log4js.replaceConsole();
+
+var mongoose = require('mongoose');
+
+var flash = require('connect-flash');
 var fs      = require('fs');
+var db = require('mylib/db.js');
+db.connect();
+var eu = require('mylib/expressUtils.js');
+var passport = require('passport')
+, LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    var User = db.User;
+    User.findOne({ username: username }, function(err, user) {
+      
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username or password.' });
+      }
+      if (user.password != password) {
+        return done(null, false, { message: 'Incorrect password or password.' });
+      }
+
+      eu.prepareUserForSession();
+      return done(null, user);
+    });
+  }
+));
+
 
 /**
  *  Define the sample application.
@@ -106,23 +141,38 @@ var SampleApp = function() {
         // assign the swig engine to .html files
         app.engine('html', cons.swig);
 
+        eu.prepareUserForSession();
+
+        //console.log(db.connections[0]);
+        //console.log("!!" + mongoose.connection.db)
         app.configure(function(){
           app.set('port', process.env.PORT || 3000);
           app.set('views', VIEWS_DIR);
           app.set('view engine', 'html');
           app.set('view options', { layout: false });
+
           app.use(express.favicon((path.join(__dirname, '/public/images/favicon.ico'))));
-          app.use(express.logger('dev'));
+          
           //if you use formidable, you have to modify the next line
           //because it's not compatible with express bodyParser
           app.use(express.bodyParser());
+          //delete express.bodyParser.parse['multipart/form-data']
           app.use(express.methodOverride());
+          app.use(express.cookieParser("hellerworld2"));
+          app.use(express.cookieSession());
+          app.use(passport.initialize());
+           
+          app.use(passport.session());
+          app.use(flash());
           app.use(app.router);
           app.use(express.static(path.join(__dirname, 'public')));
+         
         });
 
         app.configure('development', function(){
-          app.use(express.errorHandler());  
+          global.isDevelopment = true;
+          app.use(express.logger('dev'));
+           app.use(express.errorHandler());  
           require('swig').init({
             root: VIEWS_DIR, //Note this directory is your Views directory
             allowErrors: true,
@@ -130,7 +180,7 @@ var SampleApp = function() {
           });
         });
 
-        require('./routes')(app);
+        require('./routes/routes.js')(app);
         
        
     };
@@ -165,11 +215,14 @@ var SampleApp = function() {
 };   /*  Sample Application.  */
 
 
-
 /**
  *  main():  Main code.
  */
-var zapp = new SampleApp();
-zapp.initialize();
-zapp.start();
+ mongoose.connection.on('open', function() {
+  var zapp = new SampleApp();
+  zapp.initialize();
+  zapp.start();
+  
+
+});
 

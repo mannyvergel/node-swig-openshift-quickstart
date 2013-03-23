@@ -25,9 +25,15 @@
   },
 
   "dependencies": {
-    "express": "*",
-    "consolidate": "0.5.0",
-    "swig": "0.13.2"
+    "express": "3.x",
+    "consolidate": "*",
+    "swig": "0.13.x",
+    "passport": "*",
+    "passport-local" : "*",
+    "mongodb" : "*",
+    "mongoose" : "*",
+    "connect-flash": "*",
+    "log4js" : "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

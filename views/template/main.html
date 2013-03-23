@@ -1,30 +1,148 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
-    <title>{% block title %}My Website{% endblock %}</title>
-	<meta name="keywords" content="Keyword 1, Keyword 2"/>
+  <meta charset="utf-8" />
 
-    <meta name="viewport" content="width=device-width" />
+  <!-- Set the viewport width to device width for mobile -->
+  <meta name="viewport" content="width=device-width" />
 
-    <meta name="description" content="Enter Site Description"/>
-
-  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-retina.png" />
-
-    <link rel="stylesheet" href="/css/main.css" type="text/css" media="all" />  
-
-     <script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-
+  <title>{% block title %}Hello World{% endblock %}</title>
   
+  
+  <!-- Included CSS Files (Compressed) -->
+  <link rel="stylesheet" href="/css/foundation/normalize.css">
+  <link rel="stylesheet" href="/css/foundation/foundation.min.css">
+  <link rel="stylesheet" href="/css/foundation/app.css">
+<link rel="stylesheet" href="/css/main.css">
 
-    {% block head %}
-    {% endblock %}
-
+  <script src="/js/custom.modernizr.js"></script>
+  {% block head %}
+  {% endblock %}
 </head>
 <body>
-{% block content %}{% endblock %}
+  
+  <!-- Header and Nav -->
+
+  <nav class="top-bar" style="margin-bottom: 18px;">
+      <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name">
+          <div class="mini-logo"><a href="/"><img src="/images/apple-touch-icon.png" style="width: 40px;" /></a></div>
+        </li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        
+        <!-- Right Nav Section -->
+        <ul class="right">
+           <li class="divider"></li>
+           <li><a href="/">Home</a></li>
+          
+
+        {% if user %}
+           <li class="divider"></li>
+           <li class="has-dropdown"><a href="#">Welcome {{user.name}}</a>
+                <ul class="dropdown">
+                  <li><a href="/logout">Logout</a></li>
+                </ul>
+           </li>           
+        {% else %}   
+         <li class="divider"></li>     
+        <li class="has-form"><a href="/login" class="button">Login</a></li>
+        {% endif%}
+          
+        </ul>
+  
+      </section>
+    </nav>
+
+    
+<div class="row">
+  <div class="large-{%if showSideAds%}8{%else%}12{%endif%} columns">
+
+
+{% if error || messsage %}
+  <div class="row">
+    <div class="large-9 columns">
+     {% if error  %}
+    <p style="color: red;">{{error}}</p>
+    {% endif %}
+
+     {% if message  %}
+    <p style="color: green;">{{message}}</p>
+    {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  
+  <!-- End Header and Nav -->
+
+
+  {% block content %}{% endblock %}
+
+  
+  <!-- Footer -->
+  
+  <footer class="row">
+    <div class="small-12 columns">
+      <hr />
+      <div class="row">
+        <div class="small-6 columns">
+          <p>Brought to you by <a href="http://www.juansolution.com">JuanSolution</a> 2013</p>
+        </div>
+        <!--
+        <div class="six columns">
+          <ul class="link-list right">
+            <li><a href="#">Link 1</a></li>
+            <li><a href="#">Link 2</a></li>
+            <li><a href="#">Link 3</a></li>
+            <li><a href="#">Link 4</a></li>
+          </ul>
+        </div>
+      -->
+      </div>
+    </div> 
+  </footer>
+  
+  
+  <!-- Included JS Files (Compressed) -->
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/foundation/foundation.min.js"></script>
+  
+  <script>
+    $(document).foundation();
+    $(function() {
+        //init
+    });
+    
+  </script>
+  {% block bodyend %}
+ {% endblock %}
+
+    <!-- Google Analytics
+  <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-[number]']);
+  _gaq.push(['_setDomainName', '[domain name]']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  -->
 </body>
 </html>
+

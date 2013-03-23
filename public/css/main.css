@@ -49,3 +49,9 @@ p a:hover {
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
 }
+
+
+div.mini-logo {
+	padding-left:12px;
+	padding-top: 2px;
+}

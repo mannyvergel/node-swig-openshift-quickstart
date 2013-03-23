@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://invest.pesobility.com/sitemap.xml
