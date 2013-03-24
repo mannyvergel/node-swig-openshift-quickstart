@@ -33,7 +33,8 @@
     "mongodb" : "*",
     "mongoose" : "*",
     "connect-flash": "*",
-    "log4js" : "*"
+    "log4js" : "*",
+    "string" : "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
